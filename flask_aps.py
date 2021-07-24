@@ -83,7 +83,7 @@ def now():
 def medias():
     try:
         hora, pressao, umidade, temperatura, data = Plots.get_medias()
-        return render_template('teste_js_bar.html', plot_name=f'Médias dos ultimos 7 dias', varx=hora, pressao=pressao, umidade=umidade, temperatura=temperatura), 200
+        return render_template('plot_barra.html', plot_name=f'Médias dos ultimos 7 dias', varx=hora, pressao=pressao, umidade=umidade, temperatura=temperatura), 200
     except:
         return 'Algo deu errado', 503
 
@@ -110,7 +110,7 @@ def evolucao():
             dia = request.args.get('dia')
         hora, pressao, umidade, temperatura, data = Plots.get_evolucao(ano, mes, dia)
         ajuste_umid = (max(umidade)-min(umidade))*0.1
-        return render_template('teste_js.html', plot_name=data, varx=hora, pressao=pressao, umidade=umidade, temperatura=temperatura,umid_min=min(umidade)-ajuste_umid, umid_max=max(umidade)+ajuste_umid ), 200
+        return render_template('plot_linha.html', plot_name=data, varx=hora, pressao=pressao, umidade=umidade, temperatura=temperatura,umid_min=min(umidade)-ajuste_umid, umid_max=max(umidade)+ajuste_umid ), 200
     except:
         return 'Algo deu errado', 503
 
