@@ -1,0 +1,2 @@
+Data;Pressao;Umidade;Temperatura1;Temperatura2;Precipitaçao
+2021-07-30 00:13:31.127732;937.1947075060092;58.0;16.0;17.13;0.0
