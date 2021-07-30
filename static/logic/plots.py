@@ -1,6 +1,6 @@
 import pandas as pd
-from matplotlib import pyplot as plt
-import matplotlib.dates as md
+# from matplotlib import pyplot as plt
+# import matplotlib.dates as md
 import datetime
 import glob
 from io import BytesIO
@@ -86,11 +86,13 @@ class Plots():
         mes = '*' if mes=='' or mes==None else f'{int(mes):02d}'
         dia = '*' if dia=='' or dia==None else f'{int(dia):02d}'
         data = f'{dia}/{mes}/{ano}'
+        print(data)
         arquivo = glob.glob(f'./Data/{ano}_{mes}_{dia}.txt')
         arquivo.sort()
         arquivo = arquivo[-1]
         df = pd.read_csv(arquivo, sep=';')
         df['Data'] = df['Data'].astype('datetime64[ns]')
+        print(df.head())
         data = df.loc[5,'Data'].strftime("%d/%m/%Y")
         hora = [x.strftime("%H:%M") for x in df['Data'].to_list()]
         return hora, df['Pressao'].to_list(), df['Umidade'].to_list(), df['Temperatura2'].to_list(), data
