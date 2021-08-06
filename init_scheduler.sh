@@ -1,5 +1,5 @@
 #!/bin/sh
 echo Iniciando Scheduler py
-cd /home/pi/Documents/Codigos/Teste_scheduler
-lxterminal -e python3 /home/pi/Documents/Codigos/Teste_scheduler/teste_scheduler.py
+cd /home/pi/Documents/Codigos/API_Estacao
+lxterminal -e sudo /home/pi/Documents/Codigos/API_Estacao/bin/python3 /home/pi/Documents/Codigos/API_Estacao/flask_aps.py
 exit
