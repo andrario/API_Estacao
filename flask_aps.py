@@ -82,10 +82,34 @@ def now():
 @app.route('/means')
 def medias():
     try:
-        hora, pressao, umidade, temperatura, data = Plots.get_medias()
+        hora, pressao, umidade, temperatura, data = Plots.get_medias(dias=8)
         return render_template('plot_barra.html', plot_name=f'Médias dos ultimos 7 dias', varx=hora, pressao=pressao, umidade=umidade, temperatura=temperatura), 200
     except:
         return 'Algo deu errado', 503
+
+@app.route('/media_mensal')
+def media_mensal():
+    try:
+        hora, pressao, umidade, temperatura, data = Plots.get_medias(dias=31)
+        return render_template('plot_barra.html', plot_name=f'Médias dos ultimos 31 dias', varx=hora, pressao=pressao, umidade=umidade, temperatura=temperatura), 200
+    except:
+        return 'Algo deu errado', 503
+
+@app.route('/evolucao_semanal')
+def evolucao_semanal():
+    try:
+        hora, pressao, umidade, temperatura = Plots.get_evolucao_semanal()
+        return render_template('plot_linha.html', plot_name=f'Evolução dos ultimos 7 dias', varx=hora, pressao=pressao, umidade=umidade, temperatura=temperatura), 200
+    except:
+        return 'Algo deu errados', 503
+
+@app.route('/evolucao_mensal')
+def evolucao_mensal():
+    try:
+        hora, pressao, umidade, temperatura = Plots.get_evolucao_mensal(dias=31)
+        return render_template('plot_linha.html', plot_name=f'Evolução dos ultimos 30 dias', varx=hora, pressao=pressao, umidade=umidade, temperatura=temperatura), 200
+    except:
+        return 'Algo deu errados', 503
 
 @app.route('/evolucaop')
 def evolucaop():
@@ -108,8 +132,7 @@ def evolucao():
             mes = request.args.get('mes')
             dia = request.args.get('dia')
         hora, pressao, umidade, temperatura, data = Plots.get_evolucao(ano, mes, dia)
-        ajuste_umid = (max(umidade)-min(umidade))*0.1
-        return render_template('plot_linha.html', plot_name=data, varx=hora, pressao=pressao, umidade=umidade, temperatura=temperatura,umid_min=min(umidade)-ajuste_umid, umid_max=max(umidade)+ajuste_umid ), 200
+        return render_template('plot_linha.html', plot_name=data, varx=hora, pressao=pressao, umidade=umidade, temperatura=temperatura), 200
     except:
         return 'Algo deu errado', 503
 
@@ -125,4 +148,4 @@ def args():
     except:
         return 'Algo deu errado', 503
 
-app.run(host='0.0.0.0', port=80)
+app.run(host='0.0.0.0', port=80, debug=True)

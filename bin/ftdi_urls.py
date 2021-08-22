@@ -1,4 +1,4 @@
-#!/home/pi/Documents/Codigos/Flask_APS/bin/python3
+#!/home/pi/Documents/Codigos/API_Estacao/bin/python3
 
 # Copyright (c) 2019-2020, Emmanuel Blot <emmanuel.blot@free.fr>
 # All rights reserved.

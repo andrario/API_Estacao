@@ -21,7 +21,7 @@ class Plots():
         buffer = buffer.decode('utf-8')
         return buffer
 
-    def get_medias():
+    def get_medias(dias=8):
         # ano = '*' if ano=='' or ano==None else ano
         # mes = '*' if mes=='' or mes==None else f'{int(mes):02d}'
         # dia = '*' if dia=='' or dia==None else f'{int(dia):02d}'
@@ -29,7 +29,7 @@ class Plots():
         # arquivos = glob.glob(f'./Data/{ano}_{mes}_{dia}.txt')
         arquivos = glob.glob(f'./Data/*.txt')
         arquivos.sort()
-        arquivos = arquivos[-8:]
+        arquivos = arquivos[-dias:]
         
         df_week = pd.DataFrame(columns=['Data','Media_Pressao','Media_Temperatura','Media_Umidade'])
 
@@ -94,3 +94,33 @@ class Plots():
         data = df.loc[5,'Data'].strftime("%d/%m/%Y")
         hora = [x.strftime("%H:%M") for x in df['Data'].to_list()]
         return hora, df['Pressao'].to_list(), df['Umidade'].to_list(), df['Temperatura2'].to_list(), data
+
+    def get_evolucao_semanal():
+        arquivos = glob.glob(f'./Data/*.txt')
+        arquivos.sort()
+        arquivos = arquivos[-8:]
+        
+        df_week = pd.DataFrame(columns=['Data','Pressao','Umidade','Temperatura1','Temperatura2','Precipitaçao'])
+
+        for arquivo in arquivos:
+            df = pd.read_csv(arquivo, sep=';')
+            df_week = df_week.append(df, ignore_index=True)
+        df_week['Data'] = df_week['Data'].astype('datetime64[ns]')
+        hora = df_week['Data'].dt.strftime('%d/%m')
+        print(hora)
+        return hora.to_list(), df_week['Pressao'].to_list(), df_week['Umidade'].to_list(), df_week['Temperatura2'].to_list()
+
+    def get_evolucao_mensal(dias=8): # Quantidade de dias +1
+        arquivos = glob.glob(f'./Data/*.txt')
+        arquivos.sort()
+        arquivos = arquivos[-dias:]
+        
+        df_week = pd.DataFrame(columns=['Data','Pressao','Umidade','Temperatura1','Temperatura2','Precipitaçao'])
+
+        for arquivo in arquivos:
+            df = pd.read_csv(arquivo, sep=';')
+            df_week = df_week.append(df, ignore_index=True)
+        df_week['Data'] = df_week['Data'].astype('datetime64[ns]')
+        hora = df_week['Data'].dt.strftime('%d/%m')
+        print(hora)
+        return hora.to_list(), df_week['Pressao'].to_list(), df_week['Umidade'].to_list(), df_week['Temperatura2'].to_list()

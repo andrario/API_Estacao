@@ -1,4 +1,4 @@
-#!/home/pi/Documents/Codigos/Flask_APS/bin/python3
+#!/home/pi/Documents/Codigos/API_Estacao/bin/python3
 
 """Simple FTDI EEPROM configurator.
 """
