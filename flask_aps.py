@@ -79,8 +79,8 @@ def now():
     except:
         return 'Erro', 503
 
-@app.route('/means')
-def medias():
+@app.route('/media_semanal')
+def media_semanal():
     try:
         hora, pressao, umidade, temperatura, data = Plots.get_medias(dias=8)
         return render_template('plot_barra.html', plot_name=f'Médias dos ultimos 7 dias', varx=hora, pressao=pressao, umidade=umidade, temperatura=temperatura), 200
