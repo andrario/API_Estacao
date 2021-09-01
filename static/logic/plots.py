@@ -5,6 +5,7 @@ import datetime
 import glob
 from io import BytesIO
 import base64
+from pymongo import MongoClient
 
 
 class Plots():
@@ -123,4 +124,11 @@ class Plots():
         df_week['Data'] = df_week['Data'].astype('datetime64[ns]')
         hora = df_week['Data'].dt.strftime('%d/%m')
         print(hora)
+        return hora.to_list(), df_week['Pressao'].to_list(), df_week['Umidade'].to_list(), df_week['Temperatura2'].to_list()
+    
+    def get_db():
+        with MongoClient('localhost', 27017) as cliente:
+            df_week = pd.DataFrame.from_records(cliente['Estacao']['2021_08_31'].find({}))
+        df_week['Data'] = df_week['Data'].astype('datetime64[ns]')
+        hora = df_week['Data'].dt.strftime('%d/%m')
         return hora.to_list(), df_week['Pressao'].to_list(), df_week['Umidade'].to_list(), df_week['Temperatura2'].to_list()

@@ -8,6 +8,7 @@ from static.logic.plots import Plots
 import time
 import datetime
 import os
+from pymongo import MongoClient
 
 
 app = Flask(__name__)
@@ -42,9 +43,44 @@ def leitura():
         file.writelines(f"{data};{pressure};{umid};{temp1};{temp2};{precipitacao}\n")
     print('Leitura realizada')
 
+def leitura_db():
+    umid = None
+    temp1 = None
+    temp2 = None
+    pressure = None
+    precipitacao = None
+    try:
+        while umid == None and temp1 == None:
+            umid,temp1 = sensores.read_dht11()
+        while pressure == None and temp2 == None:
+            temp2,pressure = sensores.read_bme280()
+        precipitacao = sensores.read_pluviometro()
+    except:
+        pressure = 0
+        umid = 0
+        temp1 = 0
+        temp2 = 0
+    data = datetime.datetime.now()
+    nome_collection = data.strftime('%Y_%m_%d')
+    with MongoClient('localhost', 27017) as cliente:
+        db = cliente['Estacao']
+        collection = db[nome_collection]
+        entrada = {
+            "Data":data,
+            "Pressao":pressure,
+            "Umidade":umid,
+            "Temperatura1":temp1,
+            "Temperatura2":temp2,
+            "Precipitaçao":precipitacao
+        }
+        collection.insert_one(entrada)
+    print('Leitura realizada db')
+
 scheduler.init_app(app)
 scheduler.add_job(func=leitura, trigger='interval', minutes=15, id='leitura_periodica')
+scheduler.add_job(func=leitura_db, trigger='interval', minutes=15, id='leitura_periodica_db')
 leitura()
+leitura_db()
 scheduler.start()
 
 @app.route('/')
@@ -133,6 +169,20 @@ def evolucao():
             dia = request.args.get('dia')
         hora, pressao, umidade, temperatura, data = Plots.get_evolucao(ano, mes, dia)
         return render_template('plot_linha.html', plot_name=data, varx=hora, pressao=pressao, umidade=umidade, temperatura=temperatura), 200
+    except:
+        return 'Algo deu errado', 503
+
+@app.route('/testedb')
+def testedb():
+    try:
+        hora, pressao, umidade, temperatura = Plots.get_db()
+        leituras = {
+            'hora':hora,
+            'pressao':pressao,
+            'umidade':umidade,
+            'temperatura':temperatura,
+        }
+        return leituras, 200
     except:
         return 'Algo deu errado', 503
 
