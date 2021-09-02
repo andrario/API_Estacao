@@ -127,8 +127,9 @@ class Plots():
         return hora.to_list(), df_week['Pressao'].to_list(), df_week['Umidade'].to_list(), df_week['Temperatura2'].to_list()
     
     def get_db():
+        data = datetime.datetime.now().strftime('%Y_%m_%d')
         with MongoClient('localhost', 27017) as cliente:
-            df_week = pd.DataFrame.from_records(cliente['Estacao']['2021_08_31'].find({}))
+            df_week = pd.DataFrame.from_records(cliente['Estacao'][data].find({}))
         df_week['Data'] = df_week['Data'].astype('datetime64[ns]')
-        hora = df_week['Data'].dt.strftime('%d/%m')
+        hora = df_week['Data'].dt.strftime('%H:%M')
         return hora.to_list(), df_week['Pressao'].to_list(), df_week['Umidade'].to_list(), df_week['Temperatura2'].to_list()

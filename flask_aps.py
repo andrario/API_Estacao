@@ -176,13 +176,8 @@ def evolucao():
 def testedb():
     try:
         hora, pressao, umidade, temperatura = Plots.get_db()
-        leituras = {
-            'hora':hora,
-            'pressao':pressao,
-            'umidade':umidade,
-            'temperatura':temperatura,
-        }
-        return leituras, 200
+        data = datetime.datetime.utcnow().strftime('%d/%m/%Y')
+        return render_template('plot_linha.html', plot_name=data, varx=hora, pressao=pressao, umidade=umidade, temperatura=temperatura), 200
     except:
         return 'Algo deu errado', 503
 
